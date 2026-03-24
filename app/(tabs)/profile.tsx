@@ -8,11 +8,10 @@ import {
 	ScrollView,
 	Alert,
 	ActivityIndicator,
-	Platform,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useTheme } from "@/hooks/useTheme";
+import { useTheme } from "@/context/ThemeContext";
 import { useAuth } from "@/context/AuthContext";
 import { useHistory } from "@/hooks/useHistory";
 
@@ -52,10 +51,6 @@ export default function ProfileScreen() {
 
 	return (
 		<View style={styles.container}>
-			<View style={styles.header}>
-				<Text style={styles.headerTitle}>প্রোফাইল</Text>
-			</View>
-
 			<ScrollView showsVerticalScrollIndicator={false}>
 				{/* Avatar */}
 				<View style={styles.avatarSection}>
@@ -182,19 +177,7 @@ export default function ProfileScreen() {
 const makeStyles = (colors: any, isDark: boolean) =>
 	StyleSheet.create({
 		container: { flex: 1, backgroundColor: colors.background },
-		header: {
-			paddingHorizontal: 20,
-			paddingTop: Platform.OS === "ios" ? 60 : 40,
-			paddingBottom: 16,
-			backgroundColor: colors.surface,
-			borderBottomWidth: 1,
-			borderBottomColor: colors.border,
-		},
-		headerTitle: {
-			fontFamily: "Hind-Siliguri-Bold",
-			fontSize: 20,
-			color: colors.text,
-		},
+
 		avatarSection: { alignItems: "center", paddingVertical: 32 },
 		avatar: {
 			width: 88,

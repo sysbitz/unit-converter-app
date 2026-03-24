@@ -11,10 +11,28 @@ import {
 import * as SplashScreen from "expo-splash-screen";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { AuthProvider } from "@/context/AuthContext";
-import { useColorScheme, StyleSheet } from "react-native";
-import { Colors } from "@/constants/Colors";
+import { ThemeProvider, useTheme } from "@/context/ThemeContext";
+import { StyleSheet } from "react-native";
 
 SplashScreen.preventAutoHideAsync();
+
+function AppStack() {
+	const { isDark, colors } = useTheme();
+	return (
+		<>
+			<StatusBar style={isDark ? "light" : "dark"} />
+			<Stack
+				screenOptions={{
+					headerShown: false,
+					contentStyle: { backgroundColor: colors.background },
+				}}>
+				<Stack.Screen name="index" />
+				<Stack.Screen name="(auth)" />
+				<Stack.Screen name="(tabs)" />
+			</Stack>
+		</>
+	);
+}
 
 export default function RootLayout() {
 	const [loaded] = useFonts({
@@ -24,10 +42,6 @@ export default function RootLayout() {
 		"Hind-Siliguri-Bold": HindSiliguri_700Bold,
 	});
 
-	const scheme = useColorScheme();
-	const isDark = scheme === "dark";
-	const colors = isDark ? Colors.dark : Colors.light;
-
 	useEffect(() => {
 		if (loaded) SplashScreen.hideAsync();
 	}, [loaded]);
@@ -36,18 +50,11 @@ export default function RootLayout() {
 
 	return (
 		<GestureHandlerRootView style={StyleSheet.absoluteFill}>
-			<AuthProvider>
-				<StatusBar style={isDark ? "light" : "dark"} />
-				<Stack
-					screenOptions={{
-						headerShown: false,
-						contentStyle: { backgroundColor: colors.background },
-					}}>
-					<Stack.Screen name="index" options={{ headerShown: false }} />
-					<Stack.Screen name="(auth)" options={{ headerShown: false }} />
-					<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-				</Stack>
-			</AuthProvider>
+			<ThemeProvider>
+				<AuthProvider>
+					<AppStack />
+				</AuthProvider>
+			</ThemeProvider>
 		</GestureHandlerRootView>
 	);
 }
